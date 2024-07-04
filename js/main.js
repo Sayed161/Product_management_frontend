@@ -10,38 +10,98 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-const token = localStorage.getItem('token');
-fetch('http://127.0.0.1:8000/products/', {
-    headers: {
-        'Authorization': `Token ${token}`,
-        'Content-Type': 'application/json',
-    },
-})
-.then(response => response.json())
-.then(data => {
-                const tableBody = document.getElementById('product-table-body');
-                console.log(data)
-                
-                    data.forEach((product) => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${product.id }</td>
-                            <td>${product.Product_name}</td>
-                            <td>${product.SKU}</td>
-                            <td>${product.Category}</td>
-                            <td>${product.Brand}</td>
-                            <td>${product.price}$</td>
-                            <td>${product.Unit}</td>
-                            <td>${product.Quantity}</td>
-                            <td>${product.Created_by}</td>
-                            <td><a href="edit_products.html?id=${product.id}">Edit</a> 
-                <a href="#" onclick="deleteProduct(${product.id})">Delete</a></td>
+document.addEventListener('DOMContentLoaded', function() {
+    const token = localStorage.getItem('token');
+    const tableBody = document.getElementById('product-table-body');
+    const searchInput = document.getElementById('searchInput');
+    const filterCategory = document.getElementById('filterCategory');
+    
+    fetch('http://127.0.0.1:8000/products/', {
+        headers: {
+            'Authorization': `Token ${token}`,
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Function to update table rows based on data
+        const updateTableRows = (products) => {
+            tableBody.innerHTML = ''; // Clear previous rows
+            products.forEach((product) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${product.id}</td>
+                    <td>${product.Product_name}</td>
+                    <td>${product.SKU}</td>
+                    <td>${product.Category}</td>
+                    <td>${product.Brand}</td>
+                    <td>${product.price}$</td>
+                    <td>${product.Unit}</td>
+                    <td>${product.Quantity}</td>
+                    <td>${product.Created_by}</td>
+                    <td>
+                        <a href="edit_products.html?id=${product.id}">Edit</a> 
+                        <a href="#" onclick="deleteProduct(${product.id})">Delete</a>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        };
 
-                        `;
-                        tableBody.appendChild(row);
-                    }
-);
-})
+        updateTableRows(data);
+  
+        searchInput.addEventListener('keyup', function() {
+            const searchValue = this.value.toLowerCase();
+            const categoryFilter = filterCategory.value.toLowerCase();
+            
+            const filteredProducts = data.filter(product => {
+                const matchesSearch = (
+                    product.Product_name.toLowerCase().includes(searchValue) ||
+                    product.SKU.toLowerCase().includes(searchValue) ||
+                    product.Category.toLowerCase().includes(searchValue) ||
+                    product.Brand.toLowerCase().includes(searchValue)
+                );
+                
+                const matchesCategory = (
+                    categoryFilter === "" || product.Category.toLowerCase() === categoryFilter
+                );
+                
+                return matchesSearch && matchesCategory;
+            });
+            
+            updateTableRows(filteredProducts);
+        });
+        
+    
+        filterCategory.addEventListener('change', function() {
+            const searchValue = searchInput.value.toLowerCase();
+            const categoryFilter = this.value.toLowerCase();
+            
+            const filteredProducts = data.filter(product => {
+                const matchesSearch = (
+                    product.Product_name.toLowerCase().includes(searchValue) ||
+                    product.SKU.toLowerCase().includes(searchValue) ||
+                    product.Category.toLowerCase().includes(searchValue) ||
+                    product.Brand.toLowerCase().includes(searchValue)
+                );
+                
+                const matchesCategory = (
+                    categoryFilter === "" || product.Category.toLowerCase() === categoryFilter
+                );
+                
+                return matchesSearch && matchesCategory;
+            });
+            
+            updateTableRows(filteredProducts);
+        });
+    })
+    .catch(error => {
+        console.error('Error fetching products:', error);
+       
+    });
+});
+
+
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -174,4 +234,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if (userRole !== 'admin' && listProductsLink) {
         listProductsLink.parentElement.style.display = 'none'; // Hide the list products link
     }
+});
+
+
+$(document).ready(function() {
+    // Search and Filter Functionality
+    $('#searchInput').on('keyup', function() {
+        var value = $(this).val().toLowerCase();
+        $('#product-table-body tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+    $('#filterCategory').on('change', function() {
+        var category = $(this).val().toLowerCase();
+        $('#product-table-body tr').filter(function() {
+            var rowCategory = $(this).find('td:eq(3)').text().toLowerCase(); // Replace 3 with the column index of Category
+            $(this).toggle(category === "" || rowCategory.indexOf(category) > -1);
+        });
+    });
 });
