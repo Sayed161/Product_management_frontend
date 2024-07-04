@@ -1,0 +1,103 @@
+ /* Sidebar styling */
+ .side-nav {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 250px;
+    background-color: #343a40; /* Dark background color */
+    padding-top: 60px; /* Adjust based on your needs */
+  }
+
+  /* Link styling */
+  .side-nav .nav-link {
+    color: #ffffff;
+    border-bottom: 1px solid #fff; /* Light color for links */
+  }
+
+  /* Active link styling */
+  .side-nav .nav-link.active {
+    color: #fff; /* White color for active link */
+    font-weight: bold;
+  }
+
+  /* Content area */
+  .content-area {
+    margin-left: 250px; /* Same as sidebar width */
+    padding: 20px;
+    border: 1px solid #ccc;
+  }
+
+  .btn-primary-custom {
+    background-color: #ff8400; 
+    padding: 10px 20px; /* Padding for button */
+    font-size: 16px; /* Font size */
+    border-radius: 5px; /* Rounded corners */
+    transition: all 0.3s ease; /* Smooth transition */
+    color: white;
+  }
+
+  /* Hover effect */
+  .btn-primary-custom:hover {
+    background-color: #b33c00;
+    color: #fff; 
+  }
+
+  
+  .row{
+    margin-bottom: 20px;
+  }
+
+  .product-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    overflow-x: auto; /* Enable horizontal scrolling for small screens */
+}
+
+.product-item {
+    width: 300px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+.product-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.product-item h2 {
+    margin-top: 10px;
+    font-size: 20px;
+}
+
+.product-item p {
+    margin: 5px 0;
+}
+
+.product-item .actions {
+    margin-top: 10px;
+}
+
+.product-item .actions a {
+    text-decoration: none;
+    padding: 5px 10px;
+    margin-right: 10px;
+    border-radius: 3px;
+    color: #fff;
+    background-color: #007bff;
+}
+
+.product-item .actions a:hover {
+    background-color: #0056b3;
+}
+
+.product-image {
+  width: 50px; /* Adjust as needed */
+  height: auto;
+  margin-right: 10px;
+  vertical-align: middle;
+}
